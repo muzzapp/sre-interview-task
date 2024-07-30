@@ -17,14 +17,17 @@ type WriteRecordsInput struct {
 type WriteRecordsInputRecord struct {
 	Component   string
 	Environment string
-	State       string
-	Timestamp   time.Time
+	// There are probably a pre-defined set of states so this could be an enum
+	State     string
+	Timestamp time.Time
 }
 
 // Writes status records
 func (r *Repo) WriteRecords(ctx context.Context, input *WriteRecordsInput) error {
 	for _, record := range input.Records {
-		// Write the current record
+		// Now validation is done that the record is valid e.g. component & environment match naming schema
+		// or that the timestamp is reasonable (e.g. not in the future).
+		// Write the current record.
 		ddbCurrentRecord := dynamoCurrentRecord{
 			Component:   record.Component,
 			Environment: record.Environment,
