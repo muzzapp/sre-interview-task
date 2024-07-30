@@ -8,6 +8,7 @@ import (
 )
 
 var (
+	// All of these errors are actually unused
 	ErrUnknownResource       = errors.New("unknown resource")
 	ErrInvalidResourceFormat = errors.New("invalid resource format")
 	ErrInvalidDataFormat     = errors.New("invalid data format")
@@ -32,6 +33,9 @@ const (
 
 // The current state of the world based on the last record
 type dynamoCurrentRecord struct {
+	// Using long names for DynamoDB attributes consumes more RCU and WCUs
+	// so they should be kept as short as possible.
+	// See the table restructure comment in main.tf
 	Component   string
 	Environment string
 	Ts          time.Time `dynamodbav:",unixtime"`

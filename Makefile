@@ -16,6 +16,7 @@ dev_env: ## Creates the local dev environment
 	docker compose up -d localstack
 	terraform init
 	terraform apply -auto-approve
+	# Duplicated code in reset_dev_env, could be reused
 	$(AWSLOCAL) dynamodb list-tables
 	$(AWSLOCAL) dynamodb describe-table --table-name cicd-audit
 

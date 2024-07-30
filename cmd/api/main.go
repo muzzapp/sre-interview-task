@@ -20,6 +20,7 @@ func main() {
 		return
 	}
 	ddbClient := dynamodb.NewFromConfig(awsConfig)
+	// Hardcoded table name should be a config option
 	repo := repo.New(ddbClient, "cicd-audit")
 	h := handler{auditrepo: repo}
 
@@ -35,6 +36,15 @@ type handler struct {
 	auditrepo *repo.Repo
 }
 
+// Applies to all 3 methods:
+// No content type header is set.
+// Raw errors are returned but should be masked in production at least to avoid leaking internal details.
+// Errors return 200 status codes.
+// Request bodies are never closed.
+// Errors are not logged.
+// No observability via metrics/traces.
+//
+// Returned data is in different formats (plain text/JSON) in the first 2 methods.
 func (h *handler) getCurrentStatus(w http.ResponseWriter, _ *http.Request) {
 	resp, err := h.auditrepo.GetCurrentStatus(context.Background(), &repo.GetCurrentStatusInput{})
 	if err != nil {

@@ -6,6 +6,7 @@ services:
       - 4566:4566
     environment:
       SERVICES: dynamodb
+      # Using arcane YAML syntax, just use '1'
       DYNAMODB_SHARE_DB: !!str 1
   api:
     build: .

@@ -27,6 +27,11 @@ type GetCurrentStatusOutputRecord struct {
 // This gives an overview of the current state of the world to identify any
 // currently ongoing deployments or issues with current deployments.
 func (r *Repo) GetCurrentStatus(_ context.Context, _ *GetCurrentStatusInput) (GetCurrentStatusOutput, error) {
+	// Interesting to see if this is flagged as an issue or not due to issues we've seen
+	// with how DDB clients work with the context from our experience.
+	// If someone flags it, we can discuss it further, if they don't, we can discuss why it's not an issue.
+	//
+	// A scan should never be used with filtering done by the client.
 	res, err := r.client.Scan(context.Background(), &dynamodb.ScanInput{
 		TableName: aws.String(r.tableName),
 	})
@@ -36,7 +41,9 @@ func (r *Repo) GetCurrentStatus(_ context.Context, _ *GetCurrentStatusInput) (Ge
 	var records []GetCurrentStatusOutputRecord
 	for _, item := range res.Items {
 		var dcr dynamoCurrentRecord
+		// Unchecked error
 		attributevalue.UnmarshalMap(item, &dcr)
+		// Use constant instead of hardcoded value
 		if dcr.Type == "current" {
 			records = append(records, GetCurrentStatusOutputRecord{
 				Component:   dcr.Component,

@@ -16,6 +16,7 @@ resource "aws_dynamodb_table" "this" {
   hash_key       = "Component"
   range_key = "Environment"
 
+  # Some comment around how this table schema could be redone to support queries instead of using scans.
   attribute {
     name = "Component"
     type = "S"
@@ -36,6 +37,7 @@ resource "aws_dynamodb_table" "this" {
     type = "S"
   }
 
+  # This GSI is unused and could be removed
   global_secondary_index {
     name = "GSI1"
     hash_key = "State"

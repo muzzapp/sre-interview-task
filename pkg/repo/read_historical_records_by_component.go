@@ -30,6 +30,7 @@ type ReadHistoricalRecordsByComponentOutputRecord struct {
 // This is used to analyse the historical of a deployment for auditing
 // and incident investigation processes.
 func (r *Repo) ReadHistoricalRecordsByComponent(_ context.Context, input *ReadHistoricalRecordsByComponentInput) (ReadHistoricalRecordsByComponentOutput, error) {
+	// Shouldn't use scans
 	res, err := r.client.Scan(context.Background(), &dynamodb.ScanInput{
 		TableName: aws.String(r.tableName),
 	})
@@ -39,6 +40,7 @@ func (r *Repo) ReadHistoricalRecordsByComponent(_ context.Context, input *ReadHi
 	var records []ReadHistoricalRecordsByComponentOutputRecord
 	for _, item := range res.Items {
 		var dhr dynamoHistoricalRecord
+		// Unchecked error
 		attributevalue.UnmarshalMap(item, &dhr)
 		if dhr.Type == RecordTypeHistorical && dhr.Component == input.Component {
 			records = append(records, ReadHistoricalRecordsByComponentOutputRecord{
@@ -49,11 +51,14 @@ func (r *Repo) ReadHistoricalRecordsByComponent(_ context.Context, input *ReadHi
 			})
 		}
 	}
+	// If using a DynamoDB query, the records would be sorted by default
 	// Sort the records by time
 	slices.SortFunc(records, func(i, j ReadHistoricalRecordsByComponentOutputRecord) int {
 		if i.Timestamp.Before(j.Timestamp) {
 			return -1
 		}
+		// slices.SortFunc only requires a weak ordering so this additional check
+		// isn't needed and could just return 1.
 		if i.Timestamp.After(j.Timestamp) {
 			return 1
 		}
