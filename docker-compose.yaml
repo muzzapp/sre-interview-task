@@ -1,0 +1,18 @@
+version: '3'
+services:
+  localstack:
+    image: 124547247223.dkr.ecr.eu-west-2.amazonaws.com/localstack:3.6.0
+    ports:
+      - 4566:4566
+    environment:
+      SERVICES: dynamodb
+      DYNAMODB_SHARE_DB: !!str 1
+  api:
+    build: .
+    ports:
+      - 8080:8080
+    environment:
+      AWS_ACCESS_KEY_ID: abc
+      AWS_SECRET_ACCESS_KEY: def
+      AWS_ENDPOINT_URL_DYNAMODB: http://localstack:4566
+      AWS_REGION: eu-west-2
