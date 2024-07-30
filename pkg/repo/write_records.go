@@ -52,7 +52,8 @@ func (r *Repo) WriteRecords(ctx context.Context, input *WriteRecordsInput) error
 			Environment: record.Environment,
 			Ts:          record.Timestamp,
 			State:       record.State,
-			Type:        "historical",
+			// This should use `RecordTypeCurrent` instead of hardcoding `"historical"`
+			Type: "historical",
 		}
 		avh, err := attributevalue.MarshalMap(ddbHistoricalRecord)
 		if err != nil {
