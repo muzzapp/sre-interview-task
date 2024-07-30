@@ -7,5 +7,5 @@ COPY . .
 
 RUN go mod tidy && go build -o ./app ./cmd/api/
 
-# Copy image insto scratch
+# Copy image into scratch
 CMD ["./app"]
