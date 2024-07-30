@@ -90,11 +90,12 @@ Imagine you are working on an engineering team and someone has put this code up 
 
 Your task is the following;
 
-1. Return a version of this codebase with comments prefixed by `// REVIEW` detailing the
-  1. Mistakes that you find
-  2. You may provide either the corrects you'd suggest or a rough description of what the change should be
+1. Fork this repository in GitHub
+2. Create a PR with comments detailing
+  1. The mistakes that you find
+  2. Corrections you'd suggest or a rough description of what the change should be
   3. The reasoning behind the change
-2. The set requirements are
+2. The things that can't be changed are
   1. The body returned in normal operation by the external API defined by the API codebase must not change
   2. The data must be stored in DynamoDB, however the underlying format may be changed
 
